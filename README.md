@@ -25,3 +25,5 @@ Installation
 
 
 Hodor will probably always require shade from git.
+
+Hodor uses oscc(http://docs.openstack.org/developer/os-client-config/) and a clouds.yaml
