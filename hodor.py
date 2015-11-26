@@ -24,6 +24,6 @@ if __name__ == "__main__":
 
     server_name = "hodor-" + str(uuid.uuid4())
 
-    #cloud.create_server( server_name, image['id'], flavor['id'], key_name=key[0]['id'])
+    cloud.create_server( server_name, image['id'], flavor['id'], key_name=key[0]['id'])
 
 
