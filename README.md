@@ -45,3 +45,15 @@ Installation
 Hodor will probably always require shade from git.
 
 Hodor uses oscc(http://docs.openstack.org/developer/os-client-config/) and a clouds.yaml
+
+
+Destroying hodor machines
+=========================
+
+
+```shell
+nova list | awk '/hodor/ { print $4}' | xargs nova delete
+```
+
+
+
