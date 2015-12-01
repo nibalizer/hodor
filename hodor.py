@@ -6,6 +6,7 @@ import shade
 import uuid
 import sys
 import random
+import time
 
 
 def filter_images(images):
@@ -21,13 +22,9 @@ def filter_images(images):
     return new_images
 
 
-
-
-
-
 if __name__ == "__main__":
 
-    shade.simple_logging(debug=True)
+    shade.simple_logging(debug=False)
     print "HODOR, make vm"
 
     user = os.getlogin()
@@ -39,8 +36,7 @@ if __name__ == "__main__":
     flavor = cloud.get_flavor_by_ram(512)
 
     images = filter_images(cloud.list_images())
-    for i in images:
-        print i.name
+
     ubuntus = [ i for i in images if 'Ubuntu' in i.name ]
     trustys = [ i for i in ubuntus if '14.04' in i.name ]
     xenials = [ i for i in ubuntus if '16.04' in i.name ]
@@ -54,5 +50,15 @@ if __name__ == "__main__":
     server_name = "hodor-" + str(uuid.uuid4())
 
     cloud.create_server(server_name, image['id'], flavor['id'], key_name=key[0]['id'])
+    server = cloud.get_server(server_name)
+    while True:
+        print "HODOR, cloud slow"
+        time.sleep(2)
+        server = cloud.get_server(server_name)
+        if len(server.addresses) > 0:
+            break
+
+    ip = server.addresses['public'][0]['addr']
+    print "HODOR, ip is {0}".format(ip)
 
 
