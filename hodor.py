@@ -7,6 +7,7 @@ import uuid
 import sys
 import random
 import time
+import paramiko
 
 
 def filter_images(images):
@@ -37,9 +38,9 @@ if __name__ == "__main__":
 
     images = filter_images(cloud.list_images())
 
-    ubuntus = [ i for i in images if 'Ubuntu' in i.name ]
-    trustys = [ i for i in ubuntus if '14.04' in i.name ]
-    xenials = [ i for i in ubuntus if '16.04' in i.name ]
+    ubuntus = [i for i in images if 'Ubuntu' in i.name]
+    trustys = [i for i in ubuntus if '14.04' in i.name]
+    xenials = [i for i in ubuntus if '16.04' in i.name]
     print "HODOR, using image: {0}".format(trustys[0].name)
     print "HODOR, image id is {0}".format(trustys[0].id)
 
@@ -58,7 +59,19 @@ if __name__ == "__main__":
         if len(server.addresses) > 0:
             break
 
-    ip = server.addresses['public'][0]['addr']
+    # either the first addr is ipv4 or ipv6
+    if server.addresses['public'][0]['version'] == 4:
+        ip = server.addresses['public'][0]['addr']
+    else:
+        ip = server.addresses['public'][1]['addr']
     print "HODOR, ip is {0}".format(ip)
 
-
+    try:
+        client = paramiko.client.SSHClient()
+        client.load_system_host_keys()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        client.connect(ip, username='ubuntu')
+        stdin, stdout, stderr = client.exec_command('ls -l')
+    except:
+        print "Paramiko failed"
+        print "ssh ubuntu@{0}".format(ip)
